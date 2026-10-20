@@ -1,13 +1,13 @@
-# Autonomous Driving AI Chip Design Competition — In Progress
+# 4th SKKU AI Autonomous Driving Competition, AI-Chip Division — Bronze Award (Team)
 
 [한국어](README.md) | [English](README.en.md)
 
-> A team project integrating PYNQ DPU inference with PWM vehicle control, driving and parking modes, and fail-safe behavior. My role focuses on **steering and driving-control integration, ADC feedback, lane-loss recovery tuning, and vehicle-level debugging and validation**.
+> A team project that integrated PYNQ DPU inference with PWM vehicle control, driving and parking modes, and fail-safe behavior. My role covered **steering and driving-control integration, ADC feedback, lane-loss recovery tuning, and vehicle-level debugging and validation**.
 
 | Item | Details |
 |---|---|
-| Period | 2026 — in progress |
-| Status | Integration and repeated testing; final result not yet determined |
+| Period | Competition held in July 2026 (completed) |
+| Result | 3rd in the final driving run → advanced to parking stage → parking mission not completed → 5th overall, **Bronze Award, AI-Chip Division (team of five)** |
 | My role | Steering and driving control, sensor feedback, parameter tuning, system debugging |
 | Stack | Python, PYNQ, Vitis AI/DPU, OpenCV, MMIO, PWM, ADC, ultrasonic sensors |
 | Disclosure | Architecture and validation process only; team source, models, and FPGA artifacts remain private |
@@ -20,11 +20,11 @@ My role is not presented as sole authorship of a new perception algorithm. It is
 
 ## 2. Period and Result
 
-- Period: 2026, currently in progress
-- Current state: repeated integration testing of DPU inference, driving control, sensor input, and mode selection
-- Final award and official performance: not yet available
-- Internal timing observations are omitted because they are not official, controlled results
-- Parking logs include aborted tests, so no parking-completion claim is made
+- Competition: 4th Sungkyunkwan University AI Autonomous Driving Competition, AI-Chip Division, July 2026 (team of five)
+- Result: qualified for the finals → **3rd** in the final driving run → advanced to the parking stage for top teams → parking mission **not completed** → **5th** overall, **Bronze Award** in the AI-Chip Division
+- Parking failure: the ultrasonic reading stayed at a no-detection value for a long time while a target vehicle was present, and the parking attempt timed out. Preserved logs show only short dropouts and sampler-loop gaps; the cause of the long event-day no-detection (sensor, power, overlay lifecycle, MMIO, or other) is **not established**.
+- Internal timing observations are omitted because they are not official, controlled results.
+- The folder name still contains `진행중` ("in progress") so that existing links keep working; the competition is over.
 
 ## 3. Development Environment
 
@@ -116,12 +116,12 @@ The integration manifest identifies lane fitting, heading error, dynamic offset,
 | Commanded steering differed from physical steering position | Used ADC feedback and a center-alignment procedure | Calibrated at rest and checked response during driving |
 | Failures could originate in perception, control, or hardware | Recorded stage-specific runtime and event states | Correlated sensor state and events around each fault |
 
-## 7. Validation and Current Result
+## 7. Validation and Result
 
 - Integrated the data path from camera input and DPU execution to steering calculation and PWM output on PYNQ.
-- Repeatedly tested lane-loss recovery, steering limits, and center alignment.
-- Continued checking resource-loading and initialization conflicts between driving and parking modes.
-- Because the project is ongoing, no award, final course time, or parking success rate is claimed.
+- Tuned lane-loss recovery, steering limits, and center alignment through repeated vehicle tests.
+- Before the qualifier, a shifted camera mount kept lane detection working but made the car oscillate laterally. I re-established the straight-ahead reference with the car aligned, then re-tuned while checking the steering-potentiometer ADC value and the motor PWM response.
+- Competition results are listed in Section 2. The official score sheet is not included in this repository.
 
 ## 8. Repository Contents
 
@@ -135,9 +135,9 @@ No Python source, models, FPGA artifacts, datasets, logs, or internal reports ar
 
 ## 9. Limitations
 
-- Final competition results and official performance are not yet available.
 - Internal tests are not a fully controlled benchmark.
-- Parking integration is still under test; no completion-performance claim is made.
+- The parking mission was not completed at the competition, and the root cause of the long ultrasonic no-detection cannot be established without a reproduction experiment.
+- The official score sheet and certificate are not published because they contain teammates’ information.
 - The implementation includes teammate and educational baseline code, so this README explicitly separates individual contribution from team functionality.
 
 ## 10. Attribution
