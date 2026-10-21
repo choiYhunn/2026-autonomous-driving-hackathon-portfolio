@@ -1,134 +1,70 @@
-# CAN-FD Signal Packing and Receive-Timing Study
+# CAN-FD Signal Packing and Inter-Arrival Jitter of Periodic Frames
 
 [한국어](README.md) | [English](README.en.md)
 
-> A joint research project comparing how different frame organizations for the same mixed-period payload affect **receive-frame inter-arrival jitter** and model-based bus-occupancy estimates. My contribution covered **analysis workflow design, condition review, error discovery, measurement normalization, remeasurement, and interpretation**.
+> An undergraduate research project (URP) that compared how sending the same periodic signals in different CAN-FD frame organizations affects the **inter-arrival jitter of a periodic control frame**. I handled **Python trace parsing, quality checks, and statistics, the audit of comparison conditions, discussion of the re-measurement design, and interpretation**. The work was **submitted** as a full paper to the KSAE 2026 Annual Autumn Conference, where I am a co-author.
 
 | Item | Details |
 |---|---|
-| Research topic | CAN-FD signal-packing strategies A/B/C |
-| Setup | RA6M5 TX/RX, CAN-FD, PCAN traces, Python analysis |
-| Primary metric | RX inter-arrival jitter |
-| My role | Data QC, condition matching, error tracking, remeasurement, interpretation, report writing |
-| Disclosure | Purpose, method, and limitations only; source data and numerical results remain private pending approval |
+| Period | Summer 2026 URP (hardware measurements ended Aug 2026; paper submitted Sep 2026) |
+| Setup | Three Renesas RA6M5 nodes (control TX / independent background TX / RX), CAN-FD 500 kbit/s nominal · 2 Mbit/s data (BRS), PCAN-USB FD listen-only trace |
+| Primary metric | Standard deviation of inter-arrival intervals of a 5 ms critical frame |
+| My role | Trace parsing, QC, statistics, comparison-condition audit, results and figures (with the co-authors) |
+| Disclosure | Research question, method, direction of the conclusion, and limits only. Raw traces, firmware, and numerical tables or plots are joint research material and remain private |
 
-## 1. Project Overview
+## 1. Research Question
 
-In a vehicle network, timing behavior can be influenced not only by signal periods but also by how signals are grouped into CAN-FD frames. This study constructed three strategies for the same 64-byte mixed-period payload: multiple small frames, one frame per period group, and a single combined frame. RA6M5 transmit/receive nodes and PCAN traces were used for comparison.
+In vehicle networks, how signals are packed into CAN-FD frames can affect bandwidth and timing. We measured on real boards **whether sending the same signal set distributed (A), grouped per period (B), or fully packed (C) changes the regularity of a periodic control frame's arrivals**.
 
-The goal was not to generalize that one strategy is always superior. It was to **measure timing differences observed under matched experimental conditions and define the limits of their interpretation**.
+## 2. Progress and Conclusion
 
-## 2. Period and Result
+1. **Initial comparison** — under conditions with similar mean bus occupancy, two strategies showed a visible jitter difference.
+2. **Condition audit** — re-checking the configuration showed that matching occupancy had also **changed the background-traffic generation gap per strategy**. Packing and the temporal structure of background traffic had changed together, so the difference could not be attributed to packing.
+3. **Re-measurement** — with identical background input for all strategies, the large initial difference did not reproduce reliably.
+4. **Gap sweep and repeat checks** — sweeping the background generation gap in small steps changed jitter strongly even when reconstructed occupancy was nearly the same. Selected conditions kept the same pattern after board resets and permuted measurement order (performed for one strategy).
+5. **Conclusion** — not that one packing strategy always wins, but a validation-method finding: **mean bus occupancy alone does not establish equivalent timing conditions; the temporal structure of background traffic must be controlled or reported**. Packing still has a bandwidth trade-off.
 
-- Repeated measurement and run-level quality checks were completed.
-- Actual IDs, DLCs, payloads, timestamps, and bitrate conditions were cross-checked instead of trusting filenames or the test plan alone.
-- Results with unmatched conditions or failed claim gates were retained as limitations rather than deleted or interpreted favorably.
-- Detailed values, plots, and tables are not included because external publication approval for the joint research is pending.
-
-## 3. Development Environment
-
-| Area | Technology |
-|---|---|
-| TX/RX | Renesas RA6M5-based CAN-FD nodes |
-| Capture | PCAN trace capture |
-| Analysis | Python parsing, quality control, statistics, and visualization |
-| Input checks | CAN ID, DLC, payload, timestamp, nominal/data bitrate |
-| Output | Run-level metrics, condition tables, validation plots |
-
-## 4. System Architecture
+## 3. System Structure
 
 ```mermaid
 flowchart LR
-    A["RA6M5 TX"] --> B["A/B/C packing frames"]
-    T["Optional same-node dummy traffic"] --> B
-    B --> C["CAN-FD bus"]
+    A["RA6M5 Control TX<br/>(5 ms critical frame)"] --> C["CAN-FD bus"]
+    B["RA6M5 Background TX<br/>(configured gap)"] --> C
     C --> D["RA6M5 RX"]
-    C --> E["PCAN trace capture"]
-    D --> F["RX event validation"]
-    E --> G["Python parser and QC"]
-    F --> G
-    G --> H["Inter-arrival jitter"]
-    G --> I["Reconstructed occupancy"]
-    H --> J["Condition matching and interpretation"]
-    I --> J
+    C --> E["PCAN-USB FD<br/>listen-only trace"]
+    E --> F["Python parser · QC"]
+    F --> G["Inter-arrival jitter"]
+    F --> H["Reconstructed occupancy"]
+    G --> I["Condition audit and interpretation"]
+    H --> I
 ```
 
-### Packing strategies
+## 4. My Contribution
 
-| Strategy | Frame organization | Comparison purpose |
-|---|---|---|
-| A | Distributes the 5 ms and 50 ms signal groups across multiple small frames | Distributed-transmission baseline |
-| B | Combines each period group's payload into one frame | Period-group packing comparison |
-| C | Combines the entire mixed-period payload into one 64-byte frame | Maximum-packing comparison |
+- Computed metrics only after QC that checks the actual ID, DLC, payload, timestamp, and bit rate in each trace, rather than trusting file names or the plan.
+- Compared what was and was not the same between the two conditions and found the confounded comparison in which the background generation gap had also changed.
+- Organized the re-measurement and sweep results and narrowed the conclusion by separating what was measured from what was not.
+- Board firmware, wiring, and experiment operation were joint team work; joint code and results are not presented as my sole work.
 
-Repeated payloads were configured to be byte-identical across strategies, limiting payload-dependent and bit-stuffing variation where possible.
+## 5. Measurement Scope and Limits
 
-## 5. My Contribution
+1. The metric is **inter-arrival jitter**, not one-way latency or WCRT.
+2. **Reconstructed occupancy** is computed from frame lengths and bit rates in the trace, not a bus load measured directly by an instrument.
+3. The background configured gap is a firmware input, not a release period measured on the wire.
+4. The exact cause of the jitter changes (phase relationship, arbitration blocking, etc.) is **not established**. Confirming it requires recording generation requests, actual transmit starts, and receptions on one time axis.
+5. Motor stability, real PWM edges, and closed-loop control performance are out of scope.
+6. The earlier version of this README (Jul 2026) described an early campaign in which the same TX node also sent dummy traffic. The final conclusion is based on the setup above with an independent background TX node.
 
-### Analysis and quality control
+## 6. Paper
 
-- Organized the workflow from trace parsing through run-level metrics, condition comparison, and plot generation
-- Built QC around actual frame contents and configuration rather than filenames
-- Checked missing or duplicate frames, invalid DLC, and condition mismatch before interpretation
+J. Shin, **Y. H. Choi**, H. Kwak, M. Koo, and J. Jeon, "Analysis of Inter-Arrival Jitter in Periodic Control Frames under Different Temporal Structures of Background Traffic in CAN-FD," full paper (8 pp., in Korean), KSAE 2026 Annual Autumn Conference, **submitted Sep 2026**. Acceptance and presentation are not yet confirmed.
 
-### Error discovery and remeasurement
-
-- Separated cases where the experimental plan and actual trace conditions differed
-- Used strict/near/unmatched gates to prevent inappropriate direct comparisons
-- Normalized conditions, repeated measurements, and preserved failed claim gates in the result record
-
-### Interpretation and reporting
-
-- Separated measured metrics from unmeasured quantities to avoid overstated conclusions
-- Interpreted strategy differences only within the experimental setup and documented limits on generalization
-- Wrote the final research report and reviewed the analysis results
-
-### Evidence and contribution boundary
-
-The report authorship and analysis/validation records support the role above. However, the available Git history begins with a publication-candidate packaging stage; it does not prove original authorship of all firmware or analysis source. I therefore do not present the joint research source or results as my sole work.
-
-## 6. Problems and Solutions
-
-| Problem | Approach | Why it matters |
-|---|---|---|
-| Filenames could differ from actual test conditions | Validated IDs, DLCs, payloads, timestamps, and bitrates directly | Prevented misclassified runs from entering the statistics |
-| Load conditions were not always exactly matched | Applied strict/near/unmatched gates using reconstructed occupancy | Separated comparable conditions from reference-only conditions |
-| A full-ordering assumption failed at a high-load condition | Preserved the failed claim gate as a limitation | Prioritized falsifiability over a favorable result |
-| Trace and separate instrumentation campaigns covered different scopes | Kept data sources and campaigns separate in the interpretation | Avoided causal claims across different measurements |
-| The transmitting node also generated dummy-load frames | Documented the same-node dummy-traffic limitation | Did not claim complete isolation of external-node contention |
-
-## 7. Validation and Current Result
-
-- Performed format and condition QC across repeated traces.
-- Normalized conditions and repeated measurements to identify the comparable data scope.
-- Recorded both statistical outcomes and the pass/fail state of comparison and claim gates.
-- Detailed numerical results and representative plots remain private pending publication approval.
-
-### Measurement boundaries that must remain explicit
-
-1. The primary measurement is **RX inter-arrival jitter**, not transmit-to-receive one-way latency.
-2. **Reconstructed occupancy** is calculated from frame length and bitrate assumptions; it is not actual PCAN-measured bus load.
-3. Dummy traffic originates from the same TX node, so the setup does not isolate pure external-node contention.
-4. The study does not validate motor stability, PID oscillation, or physical PWM edges.
-
-## 8. Repository Contents
+## 7. Contents
 
 ```text
 .
-├─ README.md      # Korean portfolio
-└─ README.en.md   # English portfolio
+├─ README.md      # Korean
+└─ README.en.md   # English
 ```
 
-Real TRC files, firmware, FSP-generated code, analysis source, numerical tables/plots, and internal reports are not included.
-
-## 9. Limitations
-
-- Differences observed in the laboratory setup cannot be directly generalized to an entire production vehicle network.
-- RX inter-arrival jitter alone does not establish end-to-end control latency.
-- Calculated occupancy is not a measured bus-load value from the instrument.
-- Further work requires external multi-node contention and closed-loop validation through a real actuator.
-- Detailed results remain withheld until publication rights for the joint work are confirmed.
-
-## 10. Attribution
-
-This was a team and laboratory research activity. The original private repository, full RA6M5 firmware, FSP-generated artifacts, TRC files, laboratory documents, and teammate source were neither modified nor disclosed. This README describes only my verified analysis, validation, and reporting scope and does not claim sole ownership of the joint source or results.
+Raw TRC files, firmware, FSP-generated code, analysis source, numerical tables or plots, and the manuscript PDF are not included.
