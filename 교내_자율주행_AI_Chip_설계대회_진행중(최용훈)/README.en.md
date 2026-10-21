@@ -127,11 +127,24 @@ The integration manifest identifies lane fitting, heading error, dynamic offset,
 
 ```text
 .
-├─ README.md      # Korean portfolio
-└─ README.en.md   # English portfolio
+├─ README.md
+├─ README.en.md
+└─ src/portfolio_2026/
+   ├─ lane_loss_guard.py        # duration-based straight fallback and control-history reset on lane loss
+   ├─ mode_runtime.py           # keeps exactly one drive/park runtime alive and closes the previous one
+   ├─ async_frame_recorder.py   # non-blocking frame recording on a bounded queue (drops and counts when full)
+   ├─ CONTRIBUTION_BOUNDARY.md  # what is included or excluded, and the evidence used
+   └─ tests/                    # three standard unittest cases
 ```
 
-No Python source, models, FPGA artifacts, datasets, logs, or internal reports are included in this public folder.
+`src/portfolio_2026/` re-implements the parts of the competition runtime I owned (lane-loss handling, resource lifecycle when switching modes, drive recording) so they can be tested on a PC without the board or the DPU. It is **not** a copy of the competition-day code. It excludes the teammate's (PJH) lane fitting and Stanley control, the team lead's parking implementation, the AutomationLab baseline, and the DPU/YOLO utilities.
+
+```bash
+cd src
+python3 -m unittest discover -s portfolio_2026/tests -t .   # Python 3.10+, no external packages
+```
+
+Models, FPGA artifacts (`bit`/`hwh`/`xclbin`/`xmodel`), datasets, logs, and team reports are not included.
 
 ## 9. Limitations
 
