@@ -127,11 +127,24 @@ flowchart TD
 
 ```text
 .
-├─ README.md      # 한국어 포트폴리오
-└─ README.en.md   # English portfolio
+├─ README.md
+├─ README.en.md
+└─ src/portfolio_2026/
+   ├─ lane_loss_guard.py        # 차선 미검출 지속 시간 기반 직진 fallback·제어 이력 초기화
+   ├─ mode_runtime.py           # 주행/주차 모드의 자원 생성·정지·해제를 하나만 유지
+   ├─ async_frame_recorder.py   # bounded queue 기반 비차단 프레임 기록 (가득 차면 버리고 카운트)
+   ├─ CONTRIBUTION_BOUNDARY.md  # 포함·제외 범위와 근거
+   └─ tests/                    # 표준 unittest 3개
 ```
 
-이 공개 폴더에는 Python source, 모델, FPGA 산출물, dataset, 로그와 내부 보고서를 포함하지 않습니다.
+`src/portfolio_2026/`은 대회 runtime에서 제가 맡은 부분(차선 미검출 처리, 모드 전환 시 자원 수명주기, 주행 녹화)을 **보드·DPU 의존성 없이 PC에서 테스트할 수 있게 다시 작성한 코드**입니다. 대회 당일 실행본을 그대로 옮긴 것이 아니며, 팀원(PJH)의 차선 fitting·Stanley 제어, 팀장의 주차 구현, AutomationLab 교육용 baseline, DPU/YOLO 유틸리티는 포함하지 않습니다.
+
+```bash
+cd src
+python3 -m unittest discover -s portfolio_2026/tests -t .   # Python 3.10 이상, 외부 패키지 불필요
+```
+
+모델, FPGA 산출물(`bit`/`hwh`/`xclbin`/`xmodel`), dataset, 로그와 팀 보고서는 포함하지 않습니다.
 
 ## 9. 한계
 
