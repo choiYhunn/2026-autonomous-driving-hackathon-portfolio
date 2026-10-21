@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "calibration_complete": true,
+  "adc": {
+    "right_full": 1920,
+    "right_half": 2055,
+    "center": 2191,
+    "left_half": 2345,
+    "left_full": 2500,
+    "center_std": 2.5,
+    "stop_band_adc": 6.0,
+    "start_band_adc": 15.0
+  },
+  "steering": {
+    "duty_percent": 100.0,
+    "pulse_durations_ms": [8, 12, 16, 24, 32, 48],
+    "prediction_safety_factor": 0.8,
+    "reversal_settle_ms": 90.0,
+    "minimum_command_interval_ms": 5.0,
+    "positioning_validation_passed": true,
+    "pulse_model": {}
+  },
+  "lane": {
+    "x1": 164,
+    "base_y": 240,
+    "point_detection_height": 70,
+    "offset_center_px": 25.0,
+    "offset_span_px": 0.0,
+    "curve_scale_px": 35.0,
+    "offset_min_safe_px": 18.0,
+    "offset_max_safe_px": 32.0,
+    "offset_min_touch_px": 15.0,
+    "offset_max_touch_px": 35.0,
+    "target_max_step_px": 6.0,
+    "target_filter_alpha": 0.35,
+    "initial_angle_deg": 90.0,
+    "lane_lost_stop_frames": 8
+  }
+}
