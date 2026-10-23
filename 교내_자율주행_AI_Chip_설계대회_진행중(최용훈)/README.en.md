@@ -2,6 +2,8 @@
 
 [한국어](README.md) | [English](README.en.md)
 
+> This folder's content also lives in its own repository, [skku-ai-chip-autonomous-driving-2026](https://github.com/choiYhunn/skku-ai-chip-autonomous-driving-2026); future updates go there.
+
 > A team project that integrated PYNQ DPU inference with PWM vehicle control, driving and parking modes, and fail-safe behavior. My role covered **steering and driving-control integration, ADC feedback, lane-loss recovery tuning, and vehicle-level debugging and validation**.
 
 | Item | Details |

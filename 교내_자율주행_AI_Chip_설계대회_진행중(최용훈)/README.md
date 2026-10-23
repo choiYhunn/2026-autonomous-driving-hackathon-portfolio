@@ -2,6 +2,8 @@
 
 [한국어](README.md) | [English](README.en.md)
 
+> 이 폴더의 내용은 독립 저장소 [skku-ai-chip-autonomous-driving-2026](https://github.com/choiYhunn/skku-ai-chip-autonomous-driving-2026)에도 있으며, 앞으로는 그쪽을 기준으로 갱신합니다.
+
 > PYNQ 보드의 DPU 추론 결과를 PWM 차량 제어와 연결하고, 주행·주차 모드 및 Fail-Safe를 하나의 실행 흐름으로 통합한 팀 프로젝트입니다. 저는 **조향·주행 제어 통합, ADC 피드백, 차선 미검출 복귀 파라미터 튜닝, 실차 디버깅과 검증**을 담당했습니다.
 
 | 항목 | 내용 |
