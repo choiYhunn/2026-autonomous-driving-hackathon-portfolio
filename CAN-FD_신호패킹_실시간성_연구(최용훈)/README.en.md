@@ -10,7 +10,7 @@
 | Setup | Three Renesas RA6M5 nodes (control TX / independent background TX / RX), CAN-FD 500 kbit/s nominal · 2 Mbit/s data (BRS), PCAN-USB FD listen-only trace |
 | Primary metric | Standard deviation of inter-arrival intervals of a 5 ms critical frame |
 | My role | Trace parsing, QC, statistics, comparison-condition audit, results and figures (with the co-authors) |
-| Disclosure | Research question, method, direction of the conclusion, and limits only. Raw traces, firmware, and numerical tables or plots are joint research material and remain private |
+| Disclosure | Analysis code, summary tables, figures, and the non-FSP firmware sources are public in [canfd-signal-packing-timing-evaluation](https://github.com/choiYhunn/canfd-signal-packing-timing-evaluation) (co-researcher consent confirmed). Raw traces remain private |
 
 ## 1. Research Question
 
