@@ -10,7 +10,7 @@
 | 실험 구성 | Renesas RA6M5 3-node(Control TX / 독립 Background TX / RX), CAN-FD nominal 500 kbit/s · data 2 Mbit/s(BRS), PCAN-USB FD listen-only trace |
 | 핵심 지표 | 5 ms 주기 critical frame의 도착 간격 표준편차(inter-arrival jitter) |
 | 내 역할 | trace 파싱·QC·통계, 비교 조건 감사, 결과·그림 정리(공동저자들과 함께) |
-| 공개 범위 | 연구 질문·방법·결론의 방향과 한계만 공개. 원본 trace, firmware, 수치 표·그래프는 공동연구 자료로 비공개 |
+| 공개 범위 | 분석 코드·요약표·그림과 FSP 생성분을 뺀 firmware는 [canfd-signal-packing-timing-evaluation](https://github.com/choiYhunn/canfd-signal-packing-timing-evaluation)에 공개(공동 연구진 동의 확인). 원본 trace는 비공개 |
 
 ## 1. 연구 질문
 

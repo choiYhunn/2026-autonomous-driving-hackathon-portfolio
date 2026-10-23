@@ -10,7 +10,7 @@
 | 결과 | 본선 주행 3위 → 주차 단계 진출 → 주차 미션 실패 → 종합 5위, **AI칩 부문 동상(팀, 5인)** |
 | 역할 | 조향·주행 제어, 센서 피드백, 파라미터 튜닝, 시스템 디버깅 |
 | 기술 | Python, PYNQ, Vitis AI/DPU, OpenCV, MMIO, PWM, ADC, 초음파 센서 |
-| 공개 범위 | 시스템 설계와 검증 과정만 공개; 팀 소스·모델·FPGA 산출물 비공개 |
+| 공개 범위 | 본인 작성 대회 실행 소스(`src/competition_runtime/`)와 PC 재구성본(`src/portfolio_2026/`); 팀원 소스·모델·FPGA 산출물 비공개 |
 
 ## 1. 프로젝트 개요
 
@@ -129,6 +129,7 @@ flowchart TD
 .
 ├─ README.md
 ├─ README.en.md
+├─ src/competition_runtime/      # 대회 패키지 중 본인 작성 파일 (런처, 모터·ADC 보정, 캘리브레이션) — 보드 없이 실행 불가
 └─ src/portfolio_2026/
    ├─ lane_loss_guard.py        # 차선 미검출 지속 시간 기반 직진 fallback·제어 이력 초기화
    ├─ mode_runtime.py           # 주행/주차 모드의 자원 생성·정지·해제를 하나만 유지

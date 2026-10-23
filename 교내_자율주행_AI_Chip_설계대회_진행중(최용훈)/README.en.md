@@ -10,7 +10,7 @@
 | Result | 3rd in the final driving run → advanced to parking stage → parking mission not completed → 5th overall, **Bronze Award, AI-Chip Division (team of five)** |
 | My role | Steering and driving control, sensor feedback, parameter tuning, system debugging |
 | Stack | Python, PYNQ, Vitis AI/DPU, OpenCV, MMIO, PWM, ADC, ultrasonic sensors |
-| Disclosure | Architecture and validation process only; team source, models, and FPGA artifacts remain private |
+| Disclosure | My own competition-runtime files (`src/competition_runtime/`) and a PC reconstruction (`src/portfolio_2026/`); teammates' source, models, and FPGA artifacts remain private |
 
 ## 1. Project Overview
 
@@ -129,6 +129,7 @@ The integration manifest identifies lane fitting, heading error, dynamic offset,
 .
 ├─ README.md
 ├─ README.en.md
+├─ src/competition_runtime/      # my files from the competition package (launcher, motor/ADC, calibration) — needs the board to run
 └─ src/portfolio_2026/
    ├─ lane_loss_guard.py        # duration-based straight fallback and control-history reset on lane loss
    ├─ mode_runtime.py           # keeps exactly one drive/park runtime alive and closes the previous one
